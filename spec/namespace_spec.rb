@@ -673,4 +673,40 @@ describe Sinatra::Namespace do
       end
     end
   end
+
+  describe 'multi_route' do
+    require 'sinatra/multi_route'
+
+    it 'is compatible with the multi_route extension' do
+      mock_app do
+        register Sinatra::MultiRoute
+        namespace '/' do
+          get 'foo', 'bar' do
+            'ok'
+          end
+        end
+      end
+
+      get('/foo').status.should == 200
+      last_response.body.should == 'ok'
+      get('/bar').status.should == 200
+      last_response.body.should == 'ok'
+    end
+
+    it 'is compatible with the route method' do
+      mock_app do
+        register Sinatra::MultiRoute
+        namespace '/' do
+          route :get, :post ['foo', 'bar'] do
+            'ok'
+          end
+        end
+      end
+
+      [:get, :post].each do |verb|
+        send(verb, '/').status.should == 200
+        last_response.body.should == 'ok'
+      end
+    end
+  end
 end
