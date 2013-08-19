@@ -673,4 +673,19 @@ describe Sinatra::Namespace do
       end
     end
   end
+
+  describe 'redirect_to' do
+    it 'uses the namespace prefix in the route' do
+      mock_app do
+        namespace '/foo' do
+          get '/bar' do
+            redirect '/baz'
+          end
+        end
+      end
+
+      get('/foo/bar').status.should == 302
+      last_response.location.should =~ /foo\/baz/
+    end
+  end
 end
