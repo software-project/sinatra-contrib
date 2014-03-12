@@ -125,7 +125,7 @@ module Sinatra
     end
 
     module Helpers
-      include Sinatra::JSON
+      #include Sinatra::JSON
 
       def respond_with(template, object = nil, &block)
         object, template = template, nil unless Symbol === template
